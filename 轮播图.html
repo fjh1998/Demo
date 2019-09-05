@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>轮播图</title>
+    <script src="../JS/jquery-3.3.1.js"></script>
+    <style>
+        .imglist {
+            height: 400px;
+            width: auto;
+            border: red 2px;
+        }
+         /* 图片大小尽量一致，可通过PS等软件修改图片尺寸 */
+        .imglist img {
+            position: absolute;
+            float: left;
+            height: 420px;
+            width: 700px;
+        }
+
+        .root {
+            margin-left: 25%;
+            margin-top: 80px;
+        }
+
+        .tabs li {
+            margin-left: 30px;
+            width: 25px;
+            height: 25px;
+            font-size: 20px;
+            display: inline-block;
+            background: #ccc;
+            border-radius: 50%;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .tabs {
+            position: relative;
+            left: 15%;
+            top: 25px;
+        }
+
+        #btnl {
+            width: 25px;
+            height: 25px;
+            position: absolute;
+            left: 22%;
+            top: 40%;
+            font-size: 20px;
+            display: inline-block;
+            background: #ccc;
+            border-radius: 50%;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        #btnr {
+            width: 25px;
+            height: 25px;
+            position: absolute;
+            right: 25%;
+            top: 40%;
+            font-size: 20px;
+            display: inline-block;
+            background: #ccc;
+            border-radius: 50%;
+            cursor: pointer;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="root">
+        <div class="imglist">
+            <img class="img" src="./img/1.jpg">
+            <img class="img" src="./img/2.jpg">
+            <img class="img" src="./img/3.jpg">
+            <img class="img" src="./img/4.jpg">
+        </div>
+        <div id="btnl"> < </div>
+        <div id="btnr"> > </div>
+        <ul class="tabs">
+            <li style="background: red;"></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+    <script>
+        var index = 0;
+        var timer;
+        $(function () {
+            //初始化显示显示第一张图
+            $(".img").eq(index).show().siblings().hide();
+            timeshow();
+            // 鼠标悬停则停止轮播
+            $('.img').mouseenter(function(){
+                clearInterval(timer)
+            });
+            // 鼠标移出，恢复轮播
+            $('img').mouseleave(timeshow);
+            // 圆点的点击事件：点击圆点，停止轮播，获取原点位置更改index的值，调用show()函数显示对应图片，开始轮播
+            $('.tabs li').click(function(){
+                clearInterval(timer);
+                index=$(this).index();
+                show();
+                timeshow();
+            });
+            // 左边按钮的点击事件：先停止轮播，判断是否为第一张图片，如果是则显示最后一张，若不是，则显示前一张，恢复轮播
+            $('#btnl').click(function(){
+                clearInterval(timer);
+                index--;
+                if(index<0)index=3;
+                show();
+                timeshow();
+            });
+            // 右边按钮的点击事件：判断是否为最后一张图片，如果是则显示第一张图片，其他同上
+            $('#btnr').click(function(){
+                clearInterval(timer);
+                index++;
+                if(index>3)index=0;
+                show();
+                timeshow();
+            });
+        });
+        //图片及对应圆点显示
+        function show() {
+            $('.img').eq(index).fadeIn(600).siblings().fadeOut();
+            $('.tabs li').eq(index).css('background', 'red').siblings().css('background', '#ccc');
+        }
+        //周期函数，每隔两秒加载一次
+        function timeshow() {
+            timer=setInterval(function () {
+                index++;
+                // 判断是否为最后一张图片，如果是则显示第一张图片
+                if (index == 4) index = 0;
+                show();
+            }, 2000);
+        }  
+    </script>
+</body>
+
+</html>
